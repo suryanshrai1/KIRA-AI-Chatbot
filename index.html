@@ -8,13 +8,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>KIRA</h1> <!-- Added title here -->
+        <h1>KIRA</h1>
         <div class="response" id="response">
             <p>No responses yet. Ask a question!</p>
         </div>
         <div class="ask">
             <input id="user_text" type="text" class="user_input" placeholder="What do you want to ask" onkeypress="checkEnter(event)">
             <button onclick="sendText()" class="send_btn">Ask</button>
+            <button onclick="startVoiceRecognition()" class="voice_btn">🎤</button>
         </div>
     </div>
 

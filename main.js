@@ -26,6 +26,9 @@ function sendText() {
         var r = document.getElementById('response');
         r.innerHTML += `<p><strong>AI:</strong> ${data.result}</p>`;
         r.scrollTop = r.scrollHeight; // Scroll to the bottom
+
+        // Speak the response
+        speakText(data.result);
     })
     .catch(error => {
         console.error('Error:', error);
@@ -37,3 +40,34 @@ function checkEnter(event) {
         sendText();
     }
 }
+
+// Voice Recognition
+function startVoiceRecognition() {
+    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US'; // Set the language
+    recognition.interimResults = false;
+
+    recognition.onresult = function(event) {
+        var transcript = event.results[0][0].transcript;
+        document.getElementById('user_text').value = transcript; // Set the input field to the recognized text
+        sendText(); // Send the recognized text
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+    };
+
+    recognition.start();
+}
+
+// Text-to-Speech
+function speakText(text) {
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // Set the language
+    window.speechSynthesis.speak(utterance);
+}
+
+recognition.onerror = function(event) {
+    console.error('Speech recognition error:', event.error);
+    alert('Error occurred in recognition: ' + event.error);
+};

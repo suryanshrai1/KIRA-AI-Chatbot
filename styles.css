@@ -9,7 +9,7 @@ body {
     width: 100vw;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align items: center;
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
 }
@@ -53,7 +53,7 @@ body {
     height: 2rem;
     border: 2px solid #90ee90;
     outline: none;
-    width: 80%;
+    width:  80%;
     margin-right: 0.5rem;
     border-radius: 20px;
     padding: 5px 10px;
@@ -74,5 +74,23 @@ body {
 }
 
 .send_btn:hover {
+    background-color: #76c76c;
+}
+
+.voice_btn {
+    height: 2.5rem;
+    width: 15%;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    padding: 5px;
+    background-color: #90ee90;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    margin-left: 0.5rem;
+}
+
+.voice_btn:hover {
     background-color: #76c76c;
 }
