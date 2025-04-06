@@ -88,3 +88,9 @@ function speakText(text) {
         speechSynthesis.speak(utterance);
     }
 }
+
+function checkEnter(event) {
+    if (event.key === 'Enter') {
+        sendText();
+    }
+}
