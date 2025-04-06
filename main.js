@@ -1,6 +1,15 @@
 var url = 'http://127.0.0.1:1000';
+let isSpeaking = false;
+let typingInterval = null;
+let currentUtterance = null;
+let currentMessageElem = null;
 
 function sendText() {
+    if (isSpeaking) {
+        stopSpeakingAndTyping();
+        return;
+    }
+
     var text = document.getElementById('user_text').value;
     if (text.trim() === "") return;
     document.getElementById('user_text').value = '';
@@ -41,18 +50,23 @@ function sendText() {
 
 function showTypingEffect(text) {
     const responseArea = document.getElementById('response');
-    const messageElem = document.createElement('p');
-    messageElem.innerHTML = "<strong>KIRA:</strong> ";
-    responseArea.appendChild(messageElem);
+    currentMessageElem = document.createElement('p');
+    currentMessageElem.innerHTML = "<strong>KIRA:</strong> ";
+    responseArea.appendChild(currentMessageElem);
 
     let index = 0;
-    const typingInterval = setInterval(() => {
+    isSpeaking = true;
+    toggleSpeakButton(true);
+
+    typingInterval = setInterval(() => {
         if (index < text.length) {
-            messageElem.innerHTML += text.charAt(index);
+            currentMessageElem.innerHTML += text.charAt(index);
             scrollToBottom();
             index++;
         } else {
             clearInterval(typingInterval);
+            typingInterval = null;
+            currentMessageElem = null;
         }
     }, 25);
 }
@@ -71,7 +85,6 @@ function generateImage() {
     var responseArea = document.getElementById('response');
     responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
 
-    // Add a loading message
     const loadingMsg = document.createElement('p');
     loadingMsg.innerHTML = `<em>Generating image...</em>`;
     responseArea.appendChild(loadingMsg);
@@ -83,7 +96,6 @@ function generateImage() {
     })
     .then(response => response.json())
     .then(data => {
-        // Remove the loading message
         loadingMsg.remove();
 
         if (data.image_url) {
@@ -92,7 +104,7 @@ function generateImage() {
                     <img src="${data.image_url}" 
                          alt="Generated Image" 
                          class="fade-in-image"
-                         style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0;"
+                         style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0; transition: opacity 2.5s ease;"
                          onload="this.style.opacity='1'">
                 </p>`;
             responseArea.innerHTML += imageHTML;
@@ -106,7 +118,6 @@ function generateImage() {
         loadingMsg.remove();
     });
 }
-
 
 function startVoiceRecognition() {
     if (!('webkitSpeechRecognition' in window)) {
@@ -135,12 +146,43 @@ function startVoiceRecognition() {
 
 function speakText(text) {
     if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        utterance.pitch = 1;
-        utterance.rate = 1;
-        speechSynthesis.speak(utterance);
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = 'en-US';
+        currentUtterance.pitch = 1;
+        currentUtterance.rate = 1;
+
+        currentUtterance.onend = () => {
+            isSpeaking = false;
+            toggleSpeakButton(false);
+        };
+
+        speechSynthesis.speak(currentUtterance);
     }
+}
+
+function stopSpeakingAndTyping() {
+    if ('speechSynthesis' in window && speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+    }
+
+    if (typingInterval) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+    }
+
+    if (currentMessageElem) {
+        currentMessageElem.innerHTML += '...'; // Optional: show partial message
+        currentMessageElem = null;
+    }
+
+    isSpeaking = false;
+    toggleSpeakButton(false);
+}
+
+function toggleSpeakButton(isTalking) {
+    const askBtn = document.querySelector('.send_btn');
+    askBtn.textContent = isTalking ? 'Stop' : 'Ask';
+    askBtn.style.backgroundColor = isTalking ? '#ff4d4d' : '#00ffd5';
 }
 
 function checkEnter(event) {
