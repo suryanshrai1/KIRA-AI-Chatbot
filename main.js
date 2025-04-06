@@ -70,7 +70,11 @@ function generateImage() {
 
     var responseArea = document.getElementById('response');
     responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
-    responseArea.innerHTML += `<p><em>Generating image...</em></p>`;
+
+    // Add a loading message
+    const loadingMsg = document.createElement('p');
+    loadingMsg.innerHTML = `<em>Generating image...</em>`;
+    responseArea.appendChild(loadingMsg);
 
     fetch(url + '/generate_image', {
         method: 'POST',
@@ -79,8 +83,19 @@ function generateImage() {
     })
     .then(response => response.json())
     .then(data => {
+        // Remove the loading message
+        loadingMsg.remove();
+
         if (data.image_url) {
-            responseArea.innerHTML += `<p><strong>KIRA:</strong><br><img src="${data.image_url}" alt="Generated Image" style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px;"></p>`;
+            const imageHTML = `
+                <p><strong>KIRA:</strong><br>
+                    <img src="${data.image_url}" 
+                         alt="Generated Image" 
+                         class="fade-in-image"
+                         style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0;"
+                         onload="this.style.opacity='1'">
+                </p>`;
+            responseArea.innerHTML += imageHTML;
         } else {
             responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
         }
@@ -88,8 +103,10 @@ function generateImage() {
     })
     .catch(error => {
         console.error('Error:', error);
+        loadingMsg.remove();
     });
 }
+
 
 function startVoiceRecognition() {
     if (!('webkitSpeechRecognition' in window)) {
