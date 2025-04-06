@@ -2,55 +2,74 @@ var url = 'http://127.0.0.1:1000';
 
 function sendText() {
     var text = document.getElementById('user_text').value;
-    if (text.trim() === "") return; // Prevent sending empty messages
-    console.log(text);
-    
-    // Clear the input field
+    if (text.trim() === "") return;
     document.getElementById('user_text').value = '';
 
-    // Display the user's question in the response area
     var responseArea = document.getElementById('response');
     responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
 
     fetch(url + '/get_text', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ "text": text }),
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Text sent to Python");
-        console.log(data);
-        var r = document.getElementById('response');
-        r.innerHTML += `<p><strong>AI:</strong> ${data.result}</p>`;
-        r.scrollTop = r.scrollHeight; // Scroll to the bottom
-
-        // Speak the response
+        responseArea.innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
+        responseArea.scrollTop = responseArea.scrollHeight;
         speakText(data.result);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function generateImage() {
+    var text = document.getElementById('user_text').value;
+    if (text.trim() === "") return;
+
+    document.getElementById('user_text').value = '';
+
+    var responseArea = document.getElementById('response');
+    responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
+
+    // to see animation of wait
+    responseArea.innerHTML += `<p><em>Generating image...</em></p>`;
+
+
+    fetch(url + '/generate_image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "text": text }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.image_url) {
+            responseArea.innerHTML += `<p><strong>KIRA:</strong><br><img src="${data.image_url}" alt="Generated Image" style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px;"></p>`;
+        } else {
+            responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
+        }
+        responseArea.scrollTop = responseArea.scrollHeight;
     })
     .catch(error => {
         console.error('Error:', error);
     });
 }
 
-function checkEnter(event) {
-    if (event.key === 'Enter') {
-        sendText();
-    }
-}
-
-// Voice Recognition
 function startVoiceRecognition() {
-    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US'; // Set the language
+    if (!('webkitSpeechRecognition' in window)) {
+        alert('Your browser does not support Speech Recognition. Please use Chrome.');
+        return;
+    }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
     recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
     recognition.onresult = function(event) {
-        var transcript = event.results[0][0].transcript;
-        document.getElementById('user_text').value = transcript; // Set the input field to the recognized text
-        sendText(); // Send the recognized text
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('user_text').value = transcript;
+        sendText(); // ✅ Auto-send after voice input
     };
 
     recognition.onerror = function(event) {
@@ -60,14 +79,12 @@ function startVoiceRecognition() {
     recognition.start();
 }
 
-// Text-to-Speech
 function speakText(text) {
-    var utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // Set the language
-    window.speechSynthesis.speak(utterance);
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.pitch = 1;
+        utterance.rate = 1;
+        speechSynthesis.speak(utterance);
+    }
 }
-
-recognition.onerror = function(event) {
-    console.error('Speech recognition error:', event.error);
-    alert('Error occurred in recognition: ' + event.error);
-};

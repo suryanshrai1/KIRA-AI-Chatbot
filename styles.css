@@ -123,3 +123,23 @@ h1 {
     background-color: #00ffd5;
     border-radius: 3px;
 }
+
+
+.generate_image_btn {
+    height: 2.6rem;
+    padding: 0 16px;
+    border-radius: 25px;
+    font-size: 1rem;
+    border: none;
+    background-color: #ff7f50; /* Coral color */
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.generate_image_btn:hover {
+    background-color: #ff6333;
+    transform: translateY(-2px);
+}
+
