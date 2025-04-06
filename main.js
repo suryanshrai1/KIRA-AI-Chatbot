@@ -1,12 +1,15 @@
+// main.js
 var url = 'http://127.0.0.1:1000';
-let isSpeaking = false;
-let typingInterval = null;
+let memory = [];
 let currentUtterance = null;
-let currentMessageElem = null;
+let isResponding = false;
+let typingInterval = null;
 
 function sendText() {
-    if (isSpeaking) {
-        stopSpeakingAndTyping();
+    const askBtn = document.getElementById('askBtn');
+
+    if (isResponding) {
+        stopResponding();
         return;
     }
 
@@ -29,46 +32,61 @@ function sendText() {
         dotCount++;
     }, 500);
 
+    isResponding = true;
+    askBtn.innerText = 'Stop';
+
     fetch(url + '/get_text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "text": text }),
+        body: JSON.stringify({ "text": text, "history": memory })
     })
     .then(response => response.json())
     .then(data => {
         clearInterval(interval);
         const loadingElem = document.getElementById(loadingId);
         if (loadingElem) loadingElem.remove();
-        showTypingEffect(data.result);
-        speakText(data.result);
+
+        const mood = getEmojiFromSentiment(data.result);
+        const fullText = data.result + ' ' + mood;
+        showTypingEffect(fullText);
+        speakText(fullText);
+        updateMemory(text, data.result);
     })
     .catch(error => {
         clearInterval(interval);
         console.error('Error:', error);
+        isResponding = false;
+        askBtn.innerText = 'Ask';
     });
 }
 
 function showTypingEffect(text) {
     const responseArea = document.getElementById('response');
-    currentMessageElem = document.createElement('p');
-    currentMessageElem.innerHTML = "<strong>KIRA:</strong> ";
-    responseArea.appendChild(currentMessageElem);
+    const messageElem = document.createElement('p');
+    messageElem.innerHTML = "<strong>KIRA:</strong> ";
+    responseArea.appendChild(messageElem);
 
     let index = 0;
-    isSpeaking = true;
-    toggleSpeakButton(true);
-
     typingInterval = setInterval(() => {
         if (index < text.length) {
-            currentMessageElem.innerHTML += text.charAt(index);
+            messageElem.innerHTML += text.charAt(index);
             scrollToBottom();
             index++;
         } else {
             clearInterval(typingInterval);
             typingInterval = null;
-            currentMessageElem = null;
+            isResponding = false;
+            document.getElementById('askBtn').innerText = 'Ask';
         }
     }, 25);
+}
+
+function stopResponding() {
+    if (speechSynthesis.speaking) speechSynthesis.cancel();
+    if (typingInterval) clearInterval(typingInterval);
+
+    isResponding = false;
+    document.getElementById('askBtn').innerText = 'Ask';
 }
 
 function scrollToBottom() {
@@ -79,7 +97,6 @@ function scrollToBottom() {
 function generateImage() {
     var text = document.getElementById('user_text').value;
     if (text.trim() === "") return;
-
     document.getElementById('user_text').value = '';
 
     var responseArea = document.getElementById('response');
@@ -92,7 +109,7 @@ function generateImage() {
     fetch(url + '/generate_image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ "text": text }),
+        body: JSON.stringify({ "text": text })
     })
     .then(response => response.json())
     .then(data => {
@@ -104,7 +121,7 @@ function generateImage() {
                     <img src="${data.image_url}" 
                          alt="Generated Image" 
                          class="fade-in-image"
-                         style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0; transition: opacity 2.5s ease;"
+                         style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0;"
                          onload="this.style.opacity='1'">
                 </p>`;
             responseArea.innerHTML += imageHTML;
@@ -146,43 +163,22 @@ function startVoiceRecognition() {
 
 function speakText(text) {
     if ('speechSynthesis' in window) {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+
         currentUtterance = new SpeechSynthesisUtterance(text);
         currentUtterance.lang = 'en-US';
         currentUtterance.pitch = 1;
         currentUtterance.rate = 1;
 
         currentUtterance.onend = () => {
-            isSpeaking = false;
-            toggleSpeakButton(false);
+            isResponding = false;
+            document.getElementById('askBtn').innerText = 'Ask';
         };
 
         speechSynthesis.speak(currentUtterance);
     }
-}
-
-function stopSpeakingAndTyping() {
-    if ('speechSynthesis' in window && speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-    }
-
-    if (typingInterval) {
-        clearInterval(typingInterval);
-        typingInterval = null;
-    }
-
-    if (currentMessageElem) {
-        currentMessageElem.innerHTML += '...'; // Optional: show partial message
-        currentMessageElem = null;
-    }
-
-    isSpeaking = false;
-    toggleSpeakButton(false);
-}
-
-function toggleSpeakButton(isTalking) {
-    const askBtn = document.querySelector('.send_btn');
-    askBtn.textContent = isTalking ? 'Stop' : 'Ask';
-    askBtn.style.backgroundColor = isTalking ? '#ff4d4d' : '#00ffd5';
 }
 
 function checkEnter(event) {
@@ -190,3 +186,55 @@ function checkEnter(event) {
         sendText();
     }
 }
+
+function getEmojiFromSentiment(text) {
+    const positiveWords = ['great', 'awesome', 'happy', 'good', 'love'];
+    const negativeWords = ['bad', 'sad', 'angry', 'terrible', 'hate'];
+
+    const lowerText = text.toLowerCase();
+    if (positiveWords.some(word => lowerText.includes(word))) return '😊';
+    if (negativeWords.some(word => lowerText.includes(word))) return '😢';
+    return '🤔';
+}
+
+function updateMemory(user, kira) {
+    memory.push({ user, kira });
+    if (memory.length > 3) memory.shift();
+    localStorage.setItem('kiraMemory', JSON.stringify(memory));
+
+    const memoryList = document.getElementById('memoryList');
+    memoryList.innerHTML = '';
+    memory.forEach(pair => {
+        memoryList.innerHTML += `<li><strong>You:</strong> ${pair.user}<br><strong>KIRA:</strong> ${pair.kira}</li>`;
+    });
+}
+
+function handleUpload() {
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch(url + '/analyze_file', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('response').innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
+        scrollToBottom();
+    });
+}
+
+window.onload = () => {
+    const savedMemory = localStorage.getItem('kiraMemory');
+    if (savedMemory) {
+        memory = JSON.parse(savedMemory);
+        const memoryList = document.getElementById('memoryList');
+        memoryList.innerHTML = '';
+        memory.forEach(pair => {
+            memoryList.innerHTML += `<li><strong>You:</strong> ${pair.user}<br><strong>KIRA:</strong> ${pair.kira}</li>`;
+        });
+    }
+};

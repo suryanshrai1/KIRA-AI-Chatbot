@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Bot</title>
-    <link rel="stylesheet" href="./styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KIRA Chatbot</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>KIRA</h1>
-        <div class="response" id="response">
-            <p>No responses yet. Ask a question!</p>
-        </div>
-        <div class="ask">
-            <input id="user_text" type="text" class="user_input" placeholder="What do you want to ask" onkeypress="checkEnter(event)">
-            <button onclick="sendText()" class="send_btn">Ask</button>
-            <button onclick="startVoiceRecognition()" class="voice_btn">🎤</button>
-            <button onclick="generateImage()" class="generate_image_btn">Generate Image</button>
-        </div>
-        
+  <div class="container">
+    <h1>KIRA</h1>
+
+    <!-- 🧠 Memory Panel -->
+    <div id="memoryPanel" class="memory_panel">
+      <h3>🧠 Memory</h3>
+      <ul id="memoryList"></ul>
     </div>
 
-    <script src="./main.js"></script>
+    <!-- 💬 Response Section -->
+    <div class="response" id="response">
+      <p>Ask a question to get started!</p>
+    </div>
+
+    <!-- 📁 File Upload -->
+    <div class="file-upload">
+      <label for="fileInput">📁 Upload PDF:</label>
+      <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf"/>
+      <button onclick="handleUpload()">Analyze</button>
+    </div>
+
+    <!-- 💡 Input Controls -->
+    <div class="ask">
+      <input id="user_text" type="text" class="user_input" placeholder="What do you want to ask" onkeypress="checkEnter(event)" />
+      <button onclick="sendText()" class="send_btn" id="askBtn">Ask</button>
+      <button onclick="startVoiceRecognition()" class="voice_btn">🎤</button>
+      <button onclick="generateImage()" class="generate_image_btn">🖼️</button>
+    </div>
+  </div>
+
+  <script src="./main.js"></script>
 </body>
 </html>
