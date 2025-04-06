@@ -143,3 +143,13 @@ h1 {
     transform: translateY(-2px);
 }
 
+/*  for typing animation*/
+.typing {
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}

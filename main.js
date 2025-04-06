@@ -8,6 +8,18 @@ function sendText() {
     var responseArea = document.getElementById('response');
     responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
 
+    const loadingId = `loading-${Date.now()}`;
+    responseArea.innerHTML += `<p id="${loadingId}"><strong>KIRA:</strong> <span class="typing">.</span></p>`;
+    scrollToBottom();
+
+    let dotCount = 0;
+    const interval = setInterval(() => {
+        const dots = ".".repeat(dotCount % 4);
+        const typingSpan = document.querySelector(`#${loadingId} .typing`);
+        if (typingSpan) typingSpan.textContent = dots;
+        dotCount++;
+    }, 500);
+
     fetch(url + '/get_text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -15,11 +27,39 @@ function sendText() {
     })
     .then(response => response.json())
     .then(data => {
-        responseArea.innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
-        responseArea.scrollTop = responseArea.scrollHeight;
+        clearInterval(interval);
+        const loadingElem = document.getElementById(loadingId);
+        if (loadingElem) loadingElem.remove();
+        showTypingEffect(data.result);
         speakText(data.result);
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        clearInterval(interval);
+        console.error('Error:', error);
+    });
+}
+
+function showTypingEffect(text) {
+    const responseArea = document.getElementById('response');
+    const messageElem = document.createElement('p');
+    messageElem.innerHTML = "<strong>KIRA:</strong> ";
+    responseArea.appendChild(messageElem);
+
+    let index = 0;
+    const typingInterval = setInterval(() => {
+        if (index < text.length) {
+            messageElem.innerHTML += text.charAt(index);
+            scrollToBottom();
+            index++;
+        } else {
+            clearInterval(typingInterval);
+        }
+    }, 25);
+}
+
+function scrollToBottom() {
+    const responseArea = document.getElementById('response');
+    responseArea.scrollTop = responseArea.scrollHeight;
 }
 
 function generateImage() {
@@ -30,10 +70,7 @@ function generateImage() {
 
     var responseArea = document.getElementById('response');
     responseArea.innerHTML += `<p><strong>You:</strong> ${text}</p>`;
-
-    // to see animation of wait
     responseArea.innerHTML += `<p><em>Generating image...</em></p>`;
-
 
     fetch(url + '/generate_image', {
         method: 'POST',
@@ -47,7 +84,7 @@ function generateImage() {
         } else {
             responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
         }
-        responseArea.scrollTop = responseArea.scrollHeight;
+        scrollToBottom();
     })
     .catch(error => {
         console.error('Error:', error);
@@ -69,7 +106,7 @@ function startVoiceRecognition() {
     recognition.onresult = function(event) {
         const transcript = event.results[0][0].transcript;
         document.getElementById('user_text').value = transcript;
-        sendText(); // ✅ Auto-send after voice input
+        sendText();
     };
 
     recognition.onerror = function(event) {
