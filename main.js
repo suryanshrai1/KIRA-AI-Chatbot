@@ -1,9 +1,9 @@
-// main.js
 var url = 'http://127.0.0.1:1000';
 let memory = [];
 let currentUtterance = null;
 let isResponding = false;
 let typingInterval = null;
+let typingElem = null;
 
 function sendText() {
     const askBtn = document.getElementById('askBtn');
@@ -48,8 +48,9 @@ function sendText() {
 
         const mood = getEmojiFromSentiment(data.result);
         const fullText = data.result + ' ' + mood;
-        showTypingEffect(fullText);
-        speakText(fullText);
+        showTypingEffect(fullText, () => {
+            speakText(fullText);
+        });
         updateMemory(text, data.result);
     })
     .catch(error => {
@@ -60,30 +61,40 @@ function sendText() {
     });
 }
 
-function showTypingEffect(text) {
+function showTypingEffect(text, callback) {
     const responseArea = document.getElementById('response');
-    const messageElem = document.createElement('p');
-    messageElem.innerHTML = "<strong>KIRA:</strong> ";
-    responseArea.appendChild(messageElem);
+    typingElem = document.createElement('p');
+    typingElem.innerHTML = "<strong>KIRA:</strong> ";
+    responseArea.appendChild(typingElem);
 
     let index = 0;
     typingInterval = setInterval(() => {
         if (index < text.length) {
-            messageElem.innerHTML += text.charAt(index);
+            typingElem.innerHTML += text.charAt(index);
             scrollToBottom();
             index++;
         } else {
             clearInterval(typingInterval);
             typingInterval = null;
-            isResponding = false;
-            document.getElementById('askBtn').innerText = 'Ask';
+            if (callback) callback();
         }
     }, 25);
 }
 
 function stopResponding() {
-    if (speechSynthesis.speaking) speechSynthesis.cancel();
-    if (typingInterval) clearInterval(typingInterval);
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+    }
+
+    if (typingInterval) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+    }
+
+    if (typingElem) {
+        typingElem.innerHTML += " ⏹️ (Stopped)";
+        typingElem = null;
+    }
 
     isResponding = false;
     document.getElementById('askBtn').innerText = 'Ask';
@@ -167,10 +178,33 @@ function speakText(text) {
             speechSynthesis.cancel();
         }
 
+        const voiceStyle = document.getElementById('voiceStyle').value;
         currentUtterance = new SpeechSynthesisUtterance(text);
         currentUtterance.lang = 'en-US';
-        currentUtterance.pitch = 1;
-        currentUtterance.rate = 1;
+
+        const voices = speechSynthesis.getVoices();
+
+        switch (voiceStyle) {
+            case 'calm':
+                currentUtterance.pitch = 1;
+                currentUtterance.rate = 0.9;
+                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("emma") || v.name.toLowerCase().includes("google uk english female")) || voices[0];
+                break;
+            case 'dramatic':
+                currentUtterance.pitch = 1.5;
+                currentUtterance.rate = 0.8;
+                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("google us english")) || voices[0];
+                break;
+            case 'robotic':
+                currentUtterance.pitch = 0.6;
+                currentUtterance.rate = 1.2;
+                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("fred") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("robot")) || voices[0];
+                break;
+            default:
+                currentUtterance.pitch = 1;
+                currentUtterance.rate = 1;
+                currentUtterance.voice = voices[0];
+        }
 
         currentUtterance.onend = () => {
             isResponding = false;
@@ -237,4 +271,8 @@ window.onload = () => {
             memoryList.innerHTML += `<li><strong>You:</strong> ${pair.user}<br><strong>KIRA:</strong> ${pair.kira}</li>`;
         });
     }
+
+    window.speechSynthesis.onvoiceschanged = () => {
+        speechSynthesis.getVoices();
+    };
 };

@@ -31,6 +31,14 @@
     <!-- 💡 Input Controls -->
     <div class="ask">
       <input id="user_text" type="text" class="user_input" placeholder="What do you want to ask" onkeypress="checkEnter(event)" />
+      
+      <!-- 🎙️ Voice Style Dropdown -->
+      <select id="voiceStyle" class="voice_style">
+        <option value="calm">🗣️ Calm</option>
+        <option value="dramatic">🎭 Dramatic</option>
+        <option value="robotic">🤖 Robotic</option>
+      </select>
+
       <button onclick="sendText()" class="send_btn" id="askBtn">Ask</button>
       <button onclick="startVoiceRecognition()" class="voice_btn">🎤</button>
       <button onclick="generateImage()" class="generate_image_btn">🖼️</button>
