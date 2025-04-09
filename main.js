@@ -78,7 +78,7 @@ function showTypingEffect(text, callback) {
             typingInterval = null;
             if (callback) callback();
         }
-    }, 25);
+    }, 5);
 }
 
 function stopResponding() {
@@ -222,7 +222,7 @@ function checkEnter(event) {
 }
 
 function getEmojiFromSentiment(text) {
-    const positiveWords = ['great', 'awesome', 'happy', 'good', 'love'];
+    const positiveWords = ['great', 'awesome', 'happy', 'good', 'love','beautiful', 'wow'];
     const negativeWords = ['bad', 'sad', 'angry', 'terrible', 'hate'];
 
     const lowerText = text.toLowerCase();
