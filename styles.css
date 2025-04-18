@@ -278,3 +278,13 @@ body.light-mode .voice_style {
 body.light-mode .response::-webkit-scrollbar-thumb {
   background-color: #00bfa5;
 }
+
+.response strong {
+  font-weight: bold;
+  color: #00ffd5;
+}
+
+.response em {
+  font-style: italic;
+  color: #ddd;
+}

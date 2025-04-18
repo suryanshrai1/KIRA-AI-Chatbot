@@ -64,22 +64,35 @@ function sendText() {
 function showTypingEffect(text, callback) {
     const responseArea = document.getElementById('response');
     typingElem = document.createElement('p');
+
+    // Convert Markdown to HTML using marked
+    const markdownHTML = marked.parse(text);
+
     typingElem.innerHTML = "<strong>KIRA:</strong> ";
     responseArea.appendChild(typingElem);
 
     let index = 0;
+    let tempText = "";
+
+    // Typing effect for raw text, then replace with parsed markdown
     typingInterval = setInterval(() => {
         if (index < text.length) {
-            typingElem.innerHTML += text.charAt(index);
+            tempText += text.charAt(index);
+            typingElem.innerHTML = "<strong>KIRA:</strong> " + tempText;
             scrollToBottom();
             index++;
         } else {
             clearInterval(typingInterval);
             typingInterval = null;
+
+            // Replace the plain text with the rendered markdown version
+            typingElem.innerHTML = "<strong>KIRA:</strong> " + markdownHTML;
+
             if (callback) callback();
         }
     }, 5);
 }
+
 
 function stopResponding() {
     if (speechSynthesis.speaking) {
