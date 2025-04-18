@@ -179,6 +179,12 @@ function speakText(text) {
         }
 
         const voiceStyle = document.getElementById('voiceStyle').value;
+        if (voiceStyle === 'none') {
+            isResponding = false;
+            document.getElementById('askBtn').innerText = 'Ask';
+            return;
+        }
+
         currentUtterance = new SpeechSynthesisUtterance(text);
         currentUtterance.lang = 'en-US';
 
@@ -188,18 +194,30 @@ function speakText(text) {
             case 'calm':
                 currentUtterance.pitch = 1;
                 currentUtterance.rate = 0.9;
-                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("emma") || v.name.toLowerCase().includes("google uk english female")) || voices[0];
+                currentUtterance.voice = voices.find(v =>
+                    v.name.toLowerCase().includes("emma") || 
+                    v.name.toLowerCase().includes("google uk english female")
+                ) || voices[0];
                 break;
+
             case 'dramatic':
                 currentUtterance.pitch = 1.5;
                 currentUtterance.rate = 0.8;
-                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("google us english")) || voices[0];
+                currentUtterance.voice = voices.find(v =>
+                    v.name.toLowerCase().includes("google us english")
+                ) || voices[0];
                 break;
+
             case 'robotic':
                 currentUtterance.pitch = 0.6;
                 currentUtterance.rate = 1.2;
-                currentUtterance.voice = voices.find(v => v.name.toLowerCase().includes("fred") || v.name.toLowerCase().includes("zira") || v.name.toLowerCase().includes("robot")) || voices[0];
+                currentUtterance.voice = voices.find(v =>
+                    v.name.toLowerCase().includes("fred") || 
+                    v.name.toLowerCase().includes("zira") || 
+                    v.name.toLowerCase().includes("robot")
+                ) || voices[0];
                 break;
+
             default:
                 currentUtterance.pitch = 1;
                 currentUtterance.rate = 1;

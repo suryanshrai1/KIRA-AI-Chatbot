@@ -11,7 +11,6 @@
     <!-- Header Section -->
     <div class="header">
       <h1 class="kira-title">KIRA</h1>
-      <!-- Theme Switch Button -->
       <div class="theme-toggle-container">
         <label class="switch">
           <input type="checkbox" id="themeToggle" />
@@ -47,6 +46,7 @@
 
       <!-- 🎙️ Voice Style Dropdown -->
       <select id="voiceStyle" class="voice_style">
+        <option value="none">🚫 None</option>
         <option value="calm">🗣️ Calm</option>
         <option value="dramatic">🎭 Dramatic</option>
         <option value="robotic">🤖 Robotic</option>
@@ -58,13 +58,11 @@
   <script>
     const themeToggle = document.getElementById('themeToggle');
 
-    // Set theme on load from localStorage
     window.onload = () => {
       const savedTheme = localStorage.getItem('kiraTheme') || 'dark';
       document.body.classList.add(savedTheme + '-mode');
       themeToggle.checked = savedTheme === 'light';
 
-      // Memory restore (already existed)
       const savedMemory = localStorage.getItem('kiraMemory');
       if (savedMemory) {
         memory = JSON.parse(savedMemory);
@@ -74,6 +72,13 @@
           memoryList.innerHTML += `<li><strong>You:</strong> ${pair.user}<br><strong>KIRA:</strong> ${pair.kira}</li>`;
         });
       }
+
+      const savedVoiceStyle = localStorage.getItem('kiraVoiceStyle') || 'calm';
+      document.getElementById('voiceStyle').value = savedVoiceStyle;
+
+      document.getElementById('voiceStyle').addEventListener('change', (e) => {
+        localStorage.setItem('kiraVoiceStyle', e.target.value);
+      });
 
       window.speechSynthesis.onvoiceschanged = () => {
         speechSynthesis.getVoices();
