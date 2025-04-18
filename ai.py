@@ -12,6 +12,7 @@ import fitz  # PyMuPDF
 from PIL import Image
 import io
 from textblob import TextBlob
+import pytesseract
 
 # Load environment variables
 load_dotenv()
@@ -23,6 +24,9 @@ CORS(app)
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
+
+# Set Tesseract executable path (Windows specific)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\suryansh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
 
 @app.route('/', methods=['GET'])
 def home():
@@ -72,7 +76,6 @@ def generate_image():
         print("Pixabay error:", str(e))
         return jsonify({'error': 'Image generation failed'}), 500
 
-
 @app.route('/analyze_file', methods=['POST'])
 def analyze_file():
     file = request.files.get('file')
@@ -92,19 +95,19 @@ def analyze_file():
                 for page in doc:
                     content += page.get_text()
 
-                # Send to Gemini for summarization
+                # Summarize with Gemini
                 summary_prompt = f"Summarize the following PDF content in a few concise paragraphs:\n\n{content}"
                 response = model.generate_content(summary_prompt)
                 return jsonify({'result': response.text})
 
             elif file_ext in ['.jpg', '.jpeg', '.png']:
-                image = Image.open(tmp.name)
-                img_bytes = io.BytesIO()
-                image.save(img_bytes, format='PNG')
-                img_bytes.seek(0)
-                gemini_vision = genai.GenerativeModel('models/gemini-pro-vision')
-                response = gemini_vision.generate_content(["Describe this image", img_bytes.read()])
-                return jsonify({'result': response.text})
+                try:
+                    image = Image.open(tmp.name)
+                    ocr_text = pytesseract.image_to_string(image)
+                    return jsonify({'result': f"OCR Result:\n{ocr_text.strip()}"})
+                except Exception as ocr_err:
+                    print("OCR failed:", str(ocr_err))
+                    return jsonify({'error': 'Image OCR failed.'}), 500
 
             else:
                 return jsonify({'error': 'Unsupported file type'}), 400
