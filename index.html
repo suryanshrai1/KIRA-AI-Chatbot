@@ -1,11 +1,14 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KIRA Chatbot</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
   <div class="container">
     <!-- Header Section -->
@@ -33,7 +36,7 @@
     <!-- 📁 File Upload -->
     <div class="file-upload">
       <label for="fileInput">📁 Upload Image or PDF:</label>
-      <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf"/>
+      <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf" />
       <button onclick="handleUpload()">Analyze</button>
     </div>
 
@@ -54,9 +57,8 @@
     </div>
   </div>
 
-<!-- library to convert markdown to HTML.-->
+  <!-- markdown support -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <script src="./main.js"></script>
   <script>
     const themeToggle = document.getElementById('themeToggle');
@@ -101,4 +103,5 @@
     });
   </script>
 </body>
+
 </html>
