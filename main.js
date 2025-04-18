@@ -40,25 +40,25 @@ function sendText() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ "text": text, "history": memory })
     })
-    .then(response => response.json())
-    .then(data => {
-        clearInterval(interval);
-        const loadingElem = document.getElementById(loadingId);
-        if (loadingElem) loadingElem.remove();
+        .then(response => response.json())
+        .then(data => {
+            clearInterval(interval);
+            const loadingElem = document.getElementById(loadingId);
+            if (loadingElem) loadingElem.remove();
 
-        const mood = getEmojiFromSentiment(data.result);
-        const fullText = data.result + ' ' + mood;
-        showTypingEffect(fullText, () => {
-            speakText(fullText);
+            const mood = getEmojiFromSentiment(data.result);
+            const fullText = data.result + ' ' + mood;
+            showTypingEffect(fullText, () => {
+                speakText(fullText);
+            });
+            updateMemory(text, data.result);
+        })
+        .catch(error => {
+            clearInterval(interval);
+            console.error('Error:', error);
+            isResponding = false;
+            askBtn.innerText = 'Ask';
         });
-        updateMemory(text, data.result);
-    })
-    .catch(error => {
-        clearInterval(interval);
-        console.error('Error:', error);
-        isResponding = false;
-        askBtn.innerText = 'Ask';
-    });
 }
 
 function showTypingEffect(text, callback) {
@@ -118,6 +118,8 @@ function scrollToBottom() {
     responseArea.scrollTop = responseArea.scrollHeight;
 }
 
+let imageUrl = ''; // Variable to store the image URL
+
 function generateImage() {
     var text = document.getElementById('user_text').value;
     if (text.trim() === "") return;
@@ -140,14 +142,18 @@ function generateImage() {
         loadingMsg.remove();
 
         if (data.image_url) {
+            imageUrl = data.image_url; // Store the image URL
+            
             const imageHTML = `
                 <p><strong>KIRA:</strong><br>
-                    <img src="${data.image_url}" 
+                    <img src="${imageUrl}" 
                          alt="Generated Image" 
                          class="fade-in-image"
                          style="width: 100%; max-width: 350px; border-radius: 10px; margin-top: 10px; opacity: 0;"
                          onload="this.style.opacity='1'">
-                </p>`;
+                </p>
+                <button style="" onclick="openFullScreenImage()">🖥️ Full Screen</button>
+            `;
             responseArea.innerHTML += imageHTML;
         } else {
             responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
@@ -158,6 +164,15 @@ function generateImage() {
         console.error('Error:', error);
         loadingMsg.remove();
     });
+}
+
+function openFullScreenImage() {
+    // Open the stored image URL in a new tab
+    if (imageUrl) {
+        window.open(imageUrl, '_blank');
+    } else {
+        alert('No image available for full screen!');
+    }
 }
 
 function startVoiceRecognition() {
@@ -172,13 +187,13 @@ function startVoiceRecognition() {
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
         const transcript = event.results[0][0].transcript;
         document.getElementById('user_text').value = transcript;
         sendText();
     };
 
-    recognition.onerror = function(event) {
+    recognition.onerror = function (event) {
         console.error('Speech recognition error:', event.error);
     };
 
@@ -208,7 +223,7 @@ function speakText(text) {
                 currentUtterance.pitch = 1;
                 currentUtterance.rate = 0.9;
                 currentUtterance.voice = voices.find(v =>
-                    v.name.toLowerCase().includes("emma") || 
+                    v.name.toLowerCase().includes("emma") ||
                     v.name.toLowerCase().includes("google uk english female")
                 ) || voices[0];
                 break;
@@ -225,8 +240,8 @@ function speakText(text) {
                 currentUtterance.pitch = 0.6;
                 currentUtterance.rate = 1.2;
                 currentUtterance.voice = voices.find(v =>
-                    v.name.toLowerCase().includes("fred") || 
-                    v.name.toLowerCase().includes("zira") || 
+                    v.name.toLowerCase().includes("fred") ||
+                    v.name.toLowerCase().includes("zira") ||
                     v.name.toLowerCase().includes("robot")
                 ) || voices[0];
                 break;
@@ -253,7 +268,7 @@ function checkEnter(event) {
 }
 
 function getEmojiFromSentiment(text) {
-    const positiveWords = ['great', 'awesome', 'happy', 'good', 'love','beautiful', 'wow'];
+    const positiveWords = ['great', 'awesome', 'happy', 'good', 'love', 'beautiful', 'wow'];
     const negativeWords = ['bad', 'sad', 'angry', 'terrible', 'hate'];
 
     const lowerText = text.toLowerCase();
@@ -285,11 +300,11 @@ function handleUpload() {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('response').innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
-        scrollToBottom();
-    });
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('response').innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
+            scrollToBottom();
+        });
 }
 
 window.onload = () => {
