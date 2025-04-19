@@ -20,15 +20,15 @@ KIRA is an AI-powered chatbot built using **Flask (Python)** for the backend and
 
 <table>
   <tr>
-    <td><img src=![Screenshot 2025-04-20 043904](https://github.com/user-attachments/assets/1b7b466f-a415-4185-921f-b5e96c40aff4) alt="Dark Mode" width="100%"/></td>
-    <td><img src="![Screenshot 2025-04-20 044057](https://github.com/user-attachments/assets/e7cc778f-4769-4dc2-9911-00cc1801f9d2)
-" alt="Light Mode" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/1b7b466f-a415-4185-921f-b5e96c40aff4" alt="Dark Mode" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/e7cc778f-4769-4dc2-9911-00cc1801f9d2" alt="Light Mode" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Light Mode</strong></td>
     <td align="center"><strong>Dark Mode</strong></td>
+    <td align="center"><strong>Light Mode</strong></td>
   </tr>
 </table>
+
 
 
 
