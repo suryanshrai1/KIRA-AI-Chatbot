@@ -61,6 +61,7 @@ function sendText() {
         });
 }
 
+
 function showTypingEffect(text, callback) {
     const responseArea = document.getElementById('response');
     typingElem = document.createElement('p');
@@ -89,9 +90,17 @@ function showTypingEffect(text, callback) {
             typingElem.innerHTML = "<strong>KIRA:</strong> " + markdownHTML;
 
             if (callback) callback();
+
+            // Add deliberate space after each response
+            const spacer = document.createElement('div');
+            spacer.style.height = '15px';  // You can adjust this value for more or less space
+            responseArea.appendChild(spacer);
+
+            scrollToBottom();
         }
     }, 5);
 }
+
 
 
 function stopResponding() {
@@ -113,10 +122,15 @@ function stopResponding() {
     document.getElementById('askBtn').innerText = 'Ask';
 }
 
+// updated for auto scrolling
 function scrollToBottom() {
     const responseArea = document.getElementById('response');
-    responseArea.scrollTop = responseArea.scrollHeight;
+    responseArea.scrollTo({
+        top: responseArea.scrollHeight,
+        behavior: 'smooth'
+    });
 }
+
 
 let imageUrl = ''; // Variable to store the image URL
 
@@ -143,7 +157,7 @@ function generateImage() {
 
         if (data.image_url) {
             imageUrl = data.image_url; // Store the image URL
-            
+
             const imageHTML = `
                 <p><strong>KIRA:</strong><br>
                     <img src="${imageUrl}" 
@@ -158,6 +172,12 @@ function generateImage() {
         } else {
             responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
         }
+
+        // Add space after image response
+        const spacer = document.createElement('div');
+        spacer.style.height = '15px';  // Adjust the space as needed
+        responseArea.appendChild(spacer);
+
         scrollToBottom();
     })
     .catch(error => {
@@ -165,6 +185,7 @@ function generateImage() {
         loadingMsg.remove();
     });
 }
+
 
 function openFullScreenImage() {
     // Open the stored image URL in a new tab
@@ -299,6 +320,7 @@ function updateMemory(user, kira) {
     });
 }
 
+
 function handleUpload() {
     const file = document.getElementById('fileInput').files[0];
     if (!file) return;
@@ -306,16 +328,35 @@ function handleUpload() {
     const formData = new FormData();
     formData.append('file', file);
 
+    const responseArea = document.getElementById('response');
+    const analyzingId = `analyzing-${Date.now()}`;
+    responseArea.innerHTML += `<p id="${analyzingId}"><strong>KIRA:</strong> <span>Analyzing file<span class="loader"></span></span></p>`;
+    scrollToBottom();
+
     fetch(url + '/analyze_file', {
         method: 'POST',
         body: formData
     })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('response').innerHTML += `<p><strong>KIRA:</strong> ${data.result}</p>`;
-            scrollToBottom();
+    .then(res => res.json())
+    .then(data => {
+        const analyzingElem = document.getElementById(analyzingId);
+        if (analyzingElem) analyzingElem.remove();
+
+        const mood = getEmojiFromSentiment(data.result);
+        const fullText = data.result + ' ' + mood;
+
+        showTypingEffect(fullText, () => {
+            speakText(fullText);
         });
+    })
+    .catch(error => {
+        console.error('Error analyzing file:', error);
+        const analyzingElem = document.getElementById(analyzingId);
+        if (analyzingElem) analyzingElem.innerHTML = `<strong>KIRA:</strong> Failed to analyze file.`;
+    });
 }
+
+
 
 window.onload = () => {
     const savedMemory = localStorage.getItem('kiraMemory');

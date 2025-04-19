@@ -115,3 +115,140 @@ body.light-mode strong {
   color: #0f172a; /* slate-900 */
   font-weight: 700;
 }
+
+
+/* Center the KIRA title */
+.kira-title {
+  text-align: center;
+  width: 100%;
+}
+
+/* Change the text color to black in light mode */
+body.light-mode .header-text {
+  color: black;
+}
+
+/* Dark theme adjustments */
+body.dark-mode .header-text {
+  color: gray;
+}
+
+
+
+/*For theme switch*/
+body.light-mode #memoryPanel {
+  background-color: #f3f4f6; /* light gray */
+}
+body.light-mode .response {
+  background-color: #f3f4f6;
+  color: #000;
+}
+body.light-mode .ask {
+  background-color: #fff;
+}
+
+/* Reduce the glow effect for KIRA title */
+.kira-title {
+  text-shadow: 0 0 4px #00ffff, 0 0 6px #00ffff;
+}
+
+
+/* Loader Animation */
+.loader {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  border-top-color: #09f;
+  animation: spin 1s ease-in-out infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+body.light-mode .memory_panel {
+  background-color: #f3f4f6;
+  color: #000;
+}
+
+
+
+/* Adjustments for proper space usage*/
+
+/* 📦 Container fills the screen properly */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
+  max-height: 95vh;
+  padding: 0.5rem; /* Small internal padding */
+}
+
+/* 🧠 Memory Panel — fits ~5+ lines and won’t shrink further */
+.memory_panel {
+  flex: none;               /* Prevents flex container from shrinking it */
+  height: 115px;            /* Fixed height for ~5 lines */
+  min-height: 105px;        /* Don’t allow it to get any smaller */
+  max-height: 135px;        /* Optional: small growth if needed */
+  overflow-y: auto;         /* Scroll when content overflows */
+  transition: max-height 0.3s ease;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  background: #292b40;      /* match your dark bg */
+  border-radius: 0.5rem;
+  color: #ddd;
+}
+
+
+/* 💬 Response Section — flexible remaining space */
+.response {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  min-height: 200px;
+  font-size: 0.9rem;
+}
+
+/* 📥 Ask Section — compact layout, reduced padding */
+.ask {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2px;
+  padding-bottom: 4px;
+  margin-top: 4px;
+  border-top: 1px solid #333;
+  background-color: #1d1e30;
+  gap: 0.4rem;
+}
+
+.ask input,
+.ask button,
+.ask select {
+  font-size: 0.85rem;
+  padding: 4px 6px;
+}
+
+/* 🎯 Header title + theme toggle area compact */
+.kira-title {
+  font-size: 1.6rem;
+  text-shadow: 1px 1px 3px rgba(0, 255, 255, 0.4); /* reduced glow */
+  margin-bottom: 0;
+}
+
+.header-text {
+  font-size: 0.75rem;
+}
+
+/* Reduce top header margin */
+.container > .flex:first-child {
+  margin-bottom: 0.3rem;
+}
+
+
