@@ -1,296 +1,117 @@
 /* Reset + Base Styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body, html {
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Dark gradient */
-    color: #f1f1f1;
-    overflow: hidden;
-  }
-  
-  /* Container Layout */
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
-    max-width: 1000px;
-    margin: auto;
-    padding: 10px 20px;
-    background: #1e1e2f; /* Deep charcoal frame */
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    color: #ffffff;
-  }
-  
-  /* Title */
-  h1 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 5px;
-    color: #00ffd5;
-    text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
-  }
-  
-  /* Memory Panel */
-  .memory_panel {
-    max-height: 100px;
-    overflow-y: auto;
-    background: #2a2a40;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: #ddd;
-  }
-  
-  /* Remove bullet styles */
-  .memory_panel ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  /* Chat Area */
-  .response {
-    flex-grow: 1;
-    background: #2e2e42;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    overflow-y: auto;
-    font-size: 1rem;
-    line-height: 1.5;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-    scroll-behavior: smooth;
-  }
-  
-  .response p {
-    margin-bottom: 12px;
-    background-color: rgba(0, 255, 213, 0.08);
-    padding: 10px 14px;
-    border-radius: 10px;
-    color: #e0e0e0;
-  }
-  
-  /* Upload Section */
-  .file-upload {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: #ccc;
-  }
-  
-  /* Input Controls */
-  .ask {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .user_input {
-    flex: 1;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #00ffd5;
-    background-color: #121220;
-    color: #fff;
-  }
-  
-  .user_input::placeholder {
-    color: #aaa;
-  }
-  
-  /* Buttons */
-  .send_btn,
-  .voice_btn,
-  .generate_image_btn {
-    padding: 10px 14px;
-    font-size: 0.95rem;
-    border: none;
-    border-radius: 8px;
-    background: #00ffd5;
-    color: #1e1e2f;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .send_btn:hover,
-  .voice_btn:hover,
-  .generate_image_btn:hover {
-    background: #00e6c1;
-    transform: translateY(-2px);
-  }
-  
-  /* Image fade-in */
-  img.fade-in-image {
-    transition: opacity 1s ease-in;
-  }
-  
-  /* Scrollbar styling */
-  .response::-webkit-scrollbar {
-    width: 6px;
-  }
-  .response::-webkit-scrollbar-thumb {
-    background-color: #00ffd5;
-    border-radius: 3px;
-  }
-  
-
-  /* style for the voice drop down*/
-  .voice_style {
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #121220;
-    color: #00ffd5;
-    border: 1px solid #00ffd5;
-    font-size: 0.95rem;
-    font-weight: bold;
-  }
-
-  
-
-/* === Header layout for KIRA + theme toggle === */
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-bottom: 5px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body, html {
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
 }
 
-/* Centered Title */
-.kira-title {
-  text-align: center;
-  font-size: 2rem;
-  color: #00ffd5;
-  text-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
-  margin: 0 auto;
+/* Neon Text Effect */
+.neon-text {
+  text-shadow:
+    0 0 5px #22d3ee,
+    0 0 10px #22d3ee,
+    0 0 20px #22d3ee,
+    0 0 40px #22d3ee;
 }
 
-/* Theme toggle position inside header */
-.theme-toggle-container {
-  position: absolute;
-  right: 0;
-}
-
-
-
+/* Theme Toggle Slider */
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 26px;
+  width: 44px;
+  height: 24px;
 }
-
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-
 .slider {
   position: absolute;
-  cursor: pointer;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 34px;
+  inset: 0;
+  background-color: #6b7280; /* gray-500 */
+  border-radius: 9999px;
+  transition: background-color 0.4s;
 }
-
-.slider:before {
+.slider::before {
+  content: '';
   position: absolute;
-  content: "";
-  height: 20px; width: 20px;
-  left: 3px; bottom: 3px;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
   background-color: white;
-  transition: 0.4s;
   border-radius: 50%;
+  transition: transform 0.4s;
+}
+.switch input:checked + .slider {
+  background-color: #22d3ee; /* cyan-300 */
+}
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
 }
 
-input:checked + .slider {
-  background-color: #00ffd5;
+/* Image Fade‑In */
+img.fade-in-image {
+  transition: opacity 1s ease-in;
 }
 
-input:checked + .slider:before {
-  transform: translateX(24px);
+/* Custom Scrollbar (for the response area) */
+.response::-webkit-scrollbar {
+  width: 6px;
+}
+.response::-webkit-scrollbar-thumb {
+  background-color: #22d3ee; /* cyan-300 */
+  border-radius: 3px;
 }
 
-/* === Light Mode Styles === */
+/* === Light Mode Overrides === */
 body.light-mode {
   background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
   color: #1a1a1a;
 }
-
 body.light-mode .container {
   background: #ffffff;
   color: #111;
 }
-
-body.light-mode .memory_panel {
-  background: #e3f2fd;
-  color: #111;
-}
-
 body.light-mode .response {
   background: #f0f0f5;
   color: #111;
 }
-
 body.light-mode .response p {
   background-color: rgba(0, 0, 0, 0.05);
   color: #111;
 }
-
 body.light-mode .user_input {
   background-color: #f5f5f5;
   color: #111;
 }
-
 body.light-mode .send_btn,
 body.light-mode .voice_btn,
 body.light-mode .generate_image_btn {
-  background: #00bfa5;
+  background: #14b8a6; /* teal-500 */
   color: #ffffff;
 }
-
 body.light-mode .send_btn:hover,
 body.light-mode .voice_btn:hover,
 body.light-mode .generate_image_btn:hover {
-  background: #009e88;
+  background: #0d9488; /* teal-600 */
 }
-
 body.light-mode .voice_style {
   background-color: #f5f5f5;
-  color: #00bfa5;
-  border: 1px solid #00bfa5;
+  color: #14b8a6;
+  border-color: #14b8a6;
 }
-
 body.light-mode .response::-webkit-scrollbar-thumb {
-  background-color: #00bfa5;
+  background-color: #14b8a6;
 }
-
-.response strong {
-  font-weight: bold;
-  color: #00ffd5;
-}
-
-.response em {
-  font-style: italic;
-  color: #ddd;
-}
-
-/*For bold text in light theme*/
+/* Ensure any <strong> text stands out in light mode */
 body.light-mode strong {
-  color: #0f172a; /* Slightly bluish-dark for better aesthetics */
+  color: #0f172a; /* slate-900 */
   font-weight: 700;
 }
