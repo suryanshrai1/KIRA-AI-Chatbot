@@ -21,7 +21,7 @@ KIRA is an AI-powered chatbot built using **Flask (Python)** for the backend and
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/kira-ai-chatbot.git
+git clone https://github.com/suryanshrai1/kira-ai-chatbot.git
 cd kira-ai-chatbot
 ```
 
@@ -134,7 +134,7 @@ pip install python-dotenv
 
 ## 📄 License
 
-MIT License © 2025 — Made with 💙 by [YourName]
+MIT License © 2025 — Made with 💙 by Suryansh Rai
 
 ---
 
