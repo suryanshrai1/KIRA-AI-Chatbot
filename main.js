@@ -187,18 +187,28 @@ function startVoiceRecognition() {
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
+    const voiceStatus = document.getElementById('voiceStatus');
+    voiceStatus.classList.remove('hidden');
+
     recognition.onresult = function (event) {
         const transcript = event.results[0][0].transcript;
         document.getElementById('user_text').value = transcript;
+        voiceStatus.classList.add('hidden');
         sendText();
     };
 
     recognition.onerror = function (event) {
         console.error('Speech recognition error:', event.error);
+        voiceStatus.classList.add('hidden');
+    };
+
+    recognition.onend = function () {
+        voiceStatus.classList.add('hidden');
     };
 
     recognition.start();
 }
+
 
 function speakText(text) {
     if ('speechSynthesis' in window) {

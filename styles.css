@@ -288,3 +288,9 @@ body.light-mode .response::-webkit-scrollbar-thumb {
   font-style: italic;
   color: #ddd;
 }
+
+/*For bold text in light theme*/
+body.light-mode strong {
+  color: #0f172a; /* Slightly bluish-dark for better aesthetics */
+  font-weight: 700;
+}
