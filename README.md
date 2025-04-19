@@ -1,83 +1,146 @@
 # 🤖 KIRA-AI Chatbot
 
-KIRA is an AI-powered chatbot built using Flask (Python) and JavaScript, featuring voice input/output, image generation, PDF/image analysis, theme toggle, memory panel, and context awareness.
+KIRA is an AI-powered chatbot built using **Flask (Python)** for the backend and a responsive **HTML/CSS/JS** frontend. It integrates with **Google Gemini API** to generate intelligent responses and images, and includes features like voice input, theme toggle, memory panel, PDF/image analysis, and much more.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Features
 
-Follow these steps to set up and run the KIRA chatbot locally:
+- 🧠 Conversational AI using Google Gemini
+- 🖼️ Image generation from text prompts
+- 📄 PDF and image analysis
+- 🎤 Voice input and output (with style selection)
+- 🌗 Light/Dark mode with local preference memory
+- 💾 Memory panel for context retention
+- ⚙️ Fully responsive frontend with Tailwind CSS
 
-### 1. 📦 Install Required Packages
+---
 
-Use `pip` to install the backend dependencies:
+## 📦 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/kira-ai-chatbot.git
+cd kira-ai-chatbot
+```
+
+---
+
+### 2. Install Required Python Packages
+
+Use `pip` to install all necessary dependencies:
 
 ```bash
 pip install Flask flask-cors
+pip install google-generativeai
+pip install Pillow
+pip install PyMuPDF
 ```
 
-### 2. ✅ Verify Installation
+> 💡 These packages support the Flask server, CORS handling, Google Gemini API, image processing, and PDF reading.
 
-After installation, run the following to confirm everything is installed correctly:
+---
+
+### 3. Verify Installation
+
+After installing the packages, you can verify by running:
 
 ```bash
 pip list
 ```
 
-You should see `Flask`, `Flask-CORS`, and any other required packages in the list.
+You should see the following packages listed:
 
-### 3. 🔑 Set Up Your Gemini API Key
+- `Flask`
+- `flask-cors`
+- `google-generativeai`
+- `Pillow`
+- `PyMuPDF`
 
-In the `ai.py` file (line 8), replace:
+---
+
+### 4. Set Up Your Google Gemini API Key
+
+In `ai.py` (line 8), replace the placeholder:
 
 ```python
 API_KEY = "Your API KEY"
 ```
 
-with your actual **Google Gemini API key**, which you can get from [Google AI Studio](https://makersuite.google.com/app/apikey).
+with your actual **Gemini API key**, which you can get from:
+
+📎 [Google AI Studio](https://makersuite.google.com/app/apikey)
+
+> 🔐 **Best Practice:** Store your API key in a `.env` file for security and use the `python-dotenv` package.
 
 ---
 
-## 🖥️ Project Structure
-
-```
-KIRA-AI-Chatbot/
-├── static/
-│   ├── styles.css      # CSS styles (Tailwind + custom)
-│   └── script.js       # Main JavaScript logic
-├── templates/
-│   └── index.html      # Chatbot frontend
-├── ai.py               # Flask backend with Gemini API integration
-├── README.md           # You're here!
-```
-
----
-
-## 🧠 Features
-
-- 💬 Text and voice-based interaction
-- 🖼️ AI image generation
-- 📄 PDF & image content analysis
-- 🌗 Light/Dark theme toggle with memory
-- 🎙️ Voice style selection (Calm, Robotic, etc.)
-- 💾 Persistent conversation memory
-- ⚡ Typing animation and loading indicators
-
----
-
-## 📌 Notes
-
-- Make sure to run the app using:
+### 5. Run the Flask Server
 
 ```bash
 python ai.py
 ```
 
-- Access the chatbot in your browser at `http://localhost:5000`
+By default, the server will run on:
+
+```
+http://127.0.0.1:5000
+```
 
 ---
 
-## 📃 License
+### 6. Open the Chatbot in Browser
 
-This project is for educational purposes. Attribution is appreciated if used in other projects.
+Open `index.html` in your browser or run a local web server (e.g., Live Server in VS Code) to test the frontend.
+
+---
+
+## 🧪 File Structure
+
+```bash
+kira-ai-chatbot/
+├── ai.py                    # Flask backend with Gemini integration
+├── index.html               # Chatbot interface
+├── style.css                # All styles including light/dark theme
+├── script.js                # JavaScript for frontend interactions
+├── /static/                 # Optional static assets (images, etc.)
+├── /uploads/                # Temporary uploads (PDFs/images)
+```
+
+---
+
+## 🛠️ Technologies Used
+
+- **Frontend**: HTML, CSS, Tailwind CSS, JavaScript
+- **Backend**: Python, Flask, Flask-CORS
+- **AI/ML**: Google Gemini API (`google-generativeai`)
+- **Media**: `Pillow`, `PyMuPDF` for image and PDF analysis
+
+---
+
+## 📚 Optional Enhancements
+
+- Store user preferences in `localStorage` (already implemented)
+- Add `.env` support via `python-dotenv`:
+  
+```bash
+pip install python-dotenv
+```
+
+- Deploy to platforms like **Render**, **Replit**, or **Heroku** for public access
+
+---
+
+## 📄 License
+
+MIT License © 2025 — Made with 💙 by [YourName]
+
+---
+
+## 🙌 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
+
+---
 
