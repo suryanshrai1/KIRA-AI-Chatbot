@@ -151,14 +151,14 @@ function generateImage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ "text": text })
     })
-    .then(response => response.json())
-    .then(data => {
-        loadingMsg.remove();
+        .then(response => response.json())
+        .then(data => {
+            loadingMsg.remove();
 
-        if (data.image_url) {
-            imageUrl = data.image_url; // Store the image URL
+            if (data.image_url) {
+                imageUrl = data.image_url; // Store the image URL
 
-            const imageHTML = `
+                const imageHTML = `
                 <p><strong>KIRA:</strong><br>
                     <img src="${imageUrl}" 
                          alt="Generated Image" 
@@ -168,22 +168,22 @@ function generateImage() {
                 </p>
                 <button style="" onclick="openFullScreenImage()">🖥️ Full Screen</button>
             `;
-            responseArea.innerHTML += imageHTML;
-        } else {
-            responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
-        }
+                responseArea.innerHTML += imageHTML;
+            } else {
+                responseArea.innerHTML += `<p><strong>KIRA:</strong> Sorry, image generation failed. Try again later.</p>`;
+            }
 
-        // Add space after image response
-        const spacer = document.createElement('div');
-        spacer.style.height = '15px';  // Adjust the space as needed
-        responseArea.appendChild(spacer);
+            // Add space after image response
+            const spacer = document.createElement('div');
+            spacer.style.height = '15px';  // Adjust the space as needed
+            responseArea.appendChild(spacer);
 
-        scrollToBottom();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        loadingMsg.remove();
-    });
+            scrollToBottom();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingMsg.remove();
+        });
 }
 
 
@@ -337,23 +337,23 @@ function handleUpload() {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
-    .then(data => {
-        const analyzingElem = document.getElementById(analyzingId);
-        if (analyzingElem) analyzingElem.remove();
+        .then(res => res.json())
+        .then(data => {
+            const analyzingElem = document.getElementById(analyzingId);
+            if (analyzingElem) analyzingElem.remove();
 
-        const mood = getEmojiFromSentiment(data.result);
-        const fullText = data.result + ' ' + mood;
+            const mood = getEmojiFromSentiment(data.result);
+            const fullText = data.result + ' ' + mood;
 
-        showTypingEffect(fullText, () => {
-            speakText(fullText);
+            showTypingEffect(fullText, () => {
+                speakText(fullText);
+            });
+        })
+        .catch(error => {
+            console.error('Error analyzing file:', error);
+            const analyzingElem = document.getElementById(analyzingId);
+            if (analyzingElem) analyzingElem.innerHTML = `<strong>KIRA:</strong> Failed to analyze file.`;
         });
-    })
-    .catch(error => {
-        console.error('Error analyzing file:', error);
-        const analyzingElem = document.getElementById(analyzingId);
-        if (analyzingElem) analyzingElem.innerHTML = `<strong>KIRA:</strong> Failed to analyze file.`;
-    });
 }
 
 

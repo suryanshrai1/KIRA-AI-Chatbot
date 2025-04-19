@@ -4,7 +4,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-body, html {
+
+body,
+html {
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
   overflow: hidden;
@@ -26,18 +28,22 @@ body, html {
   width: 44px;
   height: 24px;
 }
+
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
+
 .slider {
   position: absolute;
   inset: 0;
-  background-color: #6b7280; /* gray-500 */
+  background-color: #6b7280;
+  /* gray-500 */
   border-radius: 9999px;
   transition: background-color 0.4s;
 }
+
 .slider::before {
   content: '';
   position: absolute;
@@ -49,10 +55,13 @@ body, html {
   border-radius: 50%;
   transition: transform 0.4s;
 }
-.switch input:checked + .slider {
-  background-color: #22d3ee; /* cyan-300 */
+
+.switch input:checked+.slider {
+  background-color: #22d3ee;
+  /* cyan-300 */
 }
-.switch input:checked + .slider::before {
+
+.switch input:checked+.slider::before {
   transform: translateX(20px);
 }
 
@@ -65,8 +74,10 @@ img.fade-in-image {
 .response::-webkit-scrollbar {
   width: 6px;
 }
+
 .response::-webkit-scrollbar-thumb {
-  background-color: #22d3ee; /* cyan-300 */
+  background-color: #22d3ee;
+  /* cyan-300 */
   border-radius: 3px;
 }
 
@@ -75,44 +86,56 @@ body.light-mode {
   background: linear-gradient(135deg, #e0f7fa, #b2ebf2, #80deea);
   color: #1a1a1a;
 }
+
 body.light-mode .container {
   background: #ffffff;
   color: #111;
 }
+
 body.light-mode .response {
   background: #f0f0f5;
   color: #111;
 }
+
 body.light-mode .response p {
   background-color: rgba(0, 0, 0, 0.05);
   color: #111;
 }
+
 body.light-mode .user_input {
   background-color: #f5f5f5;
   color: #111;
 }
+
 body.light-mode .send_btn,
 body.light-mode .voice_btn,
 body.light-mode .generate_image_btn {
-  background: #14b8a6; /* teal-500 */
+  background: #14b8a6;
+  /* teal-500 */
   color: #ffffff;
 }
+
 body.light-mode .send_btn:hover,
 body.light-mode .voice_btn:hover,
 body.light-mode .generate_image_btn:hover {
-  background: #0d9488; /* teal-600 */
+  background: #0d9488;
+  /* teal-600 */
 }
+
 body.light-mode .voice_style {
   background-color: #f5f5f5;
   color: #14b8a6;
   border-color: #14b8a6;
 }
+
 body.light-mode .response::-webkit-scrollbar-thumb {
   background-color: #14b8a6;
 }
+
 /* Ensure any <strong> text stands out in light mode */
 body.light-mode strong {
-  color: #0f172a; /* slate-900 */
+  color: #0f172a;
+  /* slate-900 */
   font-weight: 700;
 }
 
@@ -137,12 +160,15 @@ body.dark-mode .header-text {
 
 /*For theme switch*/
 body.light-mode #memoryPanel {
-  background-color: #f3f4f6; /* light gray */
+  background-color: #f3f4f6;
+  /* light gray */
 }
+
 body.light-mode .response {
   background-color: #f3f4f6;
   color: #000;
 }
+
 body.light-mode .ask {
   background-color: #fff;
 }
@@ -167,7 +193,9 @@ body.light-mode .ask {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -186,20 +214,27 @@ body.light-mode .memory_panel {
   flex-direction: column;
   height: 95vh;
   max-height: 95vh;
-  padding: 0.5rem; /* Small internal padding */
+  padding: 0.5rem;
+  /* Small internal padding */
 }
 
 /* 🧠 Memory Panel — fits ~5+ lines and won’t shrink further */
 .memory_panel {
-  flex: none;               /* Prevents flex container from shrinking it */
-  height: 115px;            /* Fixed height for ~5 lines */
-  min-height: 105px;        /* Don’t allow it to get any smaller */
-  max-height: 135px;        /* Optional: small growth if needed */
-  overflow-y: auto;         /* Scroll when content overflows */
+  flex: none;
+  /* Prevents flex container from shrinking it */
+  height: 115px;
+  /* Fixed height for ~5 lines */
+  min-height: 105px;
+  /* Don’t allow it to get any smaller */
+  max-height: 135px;
+  /* Optional: small growth if needed */
+  overflow-y: auto;
+  /* Scroll when content overflows */
   transition: max-height 0.3s ease;
   padding: 0.5rem;
   font-size: 0.85rem;
-  background: #292b40;      /* match your dark bg */
+  background: #292b40;
+  /* match your dark bg */
   border-radius: 0.5rem;
   color: #ddd;
 }
@@ -238,7 +273,8 @@ body.light-mode .memory_panel {
 /* 🎯 Header title + theme toggle area compact */
 .kira-title {
   font-size: 1.6rem;
-  text-shadow: 1px 1px 3px rgba(0, 255, 255, 0.4); /* reduced glow */
+  text-shadow: 1px 1px 3px rgba(0, 255, 255, 0.4);
+  /* reduced glow */
   margin-bottom: 0;
 }
 
@@ -247,8 +283,6 @@ body.light-mode .memory_panel {
 }
 
 /* Reduce top header margin */
-.container > .flex:first-child {
+.container>.flex:first-child {
   margin-bottom: 0.3rem;
 }
-
-
