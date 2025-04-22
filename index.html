@@ -9,66 +9,70 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
-<body
-  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 transition-colors duration-300">
-  <div class="container max-w-3xl w-full bg-[#1d1e30] rounded-xl shadow-xl p-4 text-white relative">
+<body class="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+  <div class="flex flex-col min-h-screen items-center justify-center">
 
-    <!-- Header Section -->
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="kira-title text-center text-3xl font-bold text-cyan-400 neon-text">KIRA</h1>
-      <div class="flex items-center space-x-2 text-sm font-medium">
-        <span class="header-text text-gray-300">Dark</span>
-        <label class="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" id="themeToggle" class="sr-only peer">
-          <div
-            class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 rounded-full peer dark:bg-gray-700 peer-checked:bg-cyan-400 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:translate-x-full peer-checked:border-white">
-          </div>
-        </label>
-        <span class="header-text text-gray-300">Light</span>
+    <div class="flex flex-col w-full max-w-3xl bg-[#1d1e30] rounded-xl shadow-xl p-4 text-white flex-grow">
+
+      <!-- Header Section -->
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="kira-title text-center text-3xl font-bold text-cyan-400 neon-text">KIRA</h1>
+        <div class="flex items-center space-x-2 text-sm font-medium">
+          <span class="header-text text-gray-300">Dark</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="themeToggle" class="sr-only peer">
+            <div
+              class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 rounded-full peer dark:bg-gray-700 peer-checked:bg-cyan-400 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:translate-x-full peer-checked:border-white">
+            </div>
+          </label>
+          <span class="header-text text-gray-300">Light</span>
+        </div>
       </div>
-    </div>
 
-    <!-- 🧠 Memory Panel -->
-    <div id="memoryPanel" class="memory_panel bg-[#292b40] rounded-md p-4 mb-4 overflow-y-auto max-h-28">
-      <h3 class="font-semibold text-lg mb-2">🧠 Memory</h3>
-      <ul id="memoryList" class="space-y-2 text-sm"></ul>
-    </div>
+      <!-- 🧠 Memory Panel -->
+      <div id="memoryPanel" class="memory_panel bg-[#292b40] rounded-md p-4 mb-4 overflow-y-auto max-h-28">
+        <h3 class="font-semibold text-lg mb-2">🧠 Memory</h3>
+        <ul id="memoryList" class="space-y-2 text-sm"></ul>
+      </div>
 
-    <!-- 🎙️ Voice Status -->
-    <div id="voiceStatus" class="hidden text-sm text-cyan-300 mb-2">
-      🎙️ Listening...
-    </div>
+      <!-- 🎙️ Voice Status -->
+      <div id="voiceStatus" class="hidden text-sm text-cyan-300 mb-2">
+        🎙️ Listening...
+      </div>
 
-    <!-- 💬 Response Section -->
-    <div id="response" class="response bg-[#2f314b] text-white p-4 rounded-md min-h-[550px] mb-4 overflow-y-auto">
-      <p>Ask a question to get started!</p>
-    </div>
+      <!-- 💬 Response Section (Flexible Height) -->
+      <div id="response" class="response flex-grow bg-[#2f314b] text-white p-4 rounded-md mb-4 overflow-y-auto">
+        <p>Ask a question to get started!</p>
+      </div>
 
-    <!-- 📁 File Upload -->
-    <div class="file-upload flex items-center space-x-2 mb-4 text-sm">
-      <label for="fileInput" class="font-semibold text-cyan-300">📁 Upload Image or PDF:</label>
-      <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf" class="text-sm bg-transparent text-white" />
-      <button onclick="handleUpload()" class="bg-white text-black px-2 py-1 rounded hover:bg-gray-200">Analyze</button>
-    </div>
+      <!-- 📁 File Upload -->
+      <div class="file-upload flex items-center space-x-2 mb-4 text-sm">
+        <label for="fileInput" class="font-semibold text-cyan-300">📁 Upload Image or PDF:</label>
+        <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf"
+          class="text-sm bg-transparent text-white" />
+        <button onclick="handleUpload()" class="bg-white text-black px-2 py-1 rounded hover:bg-gray-200">Analyze</button>
+      </div>
 
-    <!-- 💡 Input Controls -->
-    <div class="ask flex flex-wrap sm:flex-nowrap items-center space-y-2 sm:space-y-0 sm:space-x-2">
-      <input id="user_text" type="text"
-        class="user_input flex-1 rounded px-2 py-1 text-black outline-none border border-cyan-400 bg-white"
-        placeholder="What do you want to ask" onkeypress="checkEnter(event)" />
-      <button onclick="sendText()"
-        class="send_btn bg-cyan-400 text-black font-semibold px-3 py-1 rounded hover:bg-cyan-300"
-        id="askBtn">Ask</button>
-      <button onclick="startVoiceRecognition()"
-        class="voice_btn bg-cyan-400 px-3 py-1 rounded text-black hover:bg-cyan-300">🎤</button>
-      <button onclick="generateImage()"
-        class="generate_image_btn bg-cyan-400 px-3 py-1 rounded text-black hover:bg-cyan-300">🖼️</button>
-      <select id="voiceStyle" class="voice_style bg-black text-white border border-cyan-400 px-2 py-1 rounded">
-        <option value="none">🚫 None</option>
-        <option value="calm">🗣️ Calm</option>
-        <option value="dramatic">🎭 Dramatic</option>
-        <option value="robotic">🤖 Robotic</option>
-      </select>
+      <!-- 💡 Input Controls -->
+      <div class="ask flex flex-wrap sm:flex-nowrap items-center space-y-2 sm:space-y-0 sm:space-x-2">
+        <input id="user_text" type="text"
+          class="user_input flex-1 rounded px-2 py-1 text-black outline-none border border-cyan-400 bg-white"
+          placeholder="What do you want to ask" onkeypress="checkEnter(event)" />
+        <button onclick="sendText()"
+          class="send_btn bg-cyan-400 text-black font-semibold px-3 py-1 rounded hover:bg-cyan-300"
+          id="askBtn">Ask</button>
+        <button onclick="startVoiceRecognition()"
+          class="voice_btn bg-cyan-400 px-3 py-1 rounded text-black hover:bg-cyan-300">🎤</button>
+        <button onclick="generateImage()"
+          class="generate_image_btn bg-cyan-400 px-3 py-1 rounded text-black hover:bg-cyan-300">🖼️</button>
+        <select id="voiceStyle"
+          class="voice_style bg-black text-white border border-cyan-400 px-2 py-1 rounded">
+          <option value="none">🚫 None</option>
+          <option value="calm">🗣️ Calm</option>
+          <option value="dramatic">🎭 Dramatic</option>
+          <option value="robotic">🤖 Robotic</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -122,7 +126,6 @@
   <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-cyan-400 border-opacity-75"></div>
   </div>
-
 </body>
 
 </html>
