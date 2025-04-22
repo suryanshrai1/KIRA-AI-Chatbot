@@ -1,0 +1,7 @@
+Flask
+flask-cors
+gunicorn
+google-generativeai
+Pillow
+PyMuPDF
+
