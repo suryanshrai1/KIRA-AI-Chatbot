@@ -1,6 +1,6 @@
 Flask
 flask-cors
-gunicorn
+//gunicorn
 google-generativeai
 Pillow
 PyMuPDF
